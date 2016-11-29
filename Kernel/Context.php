@@ -1,8 +1,6 @@
 <?php
-namespace Simple/Kernel;
+namespace Simple\Kernel;
 class Context {
-    protected $_controller = null;
-    protected $_action = null;
     protected $_servername = null;
     protected $_port = null;
     protected $_requesturi = null;
@@ -15,30 +13,25 @@ class Context {
         $this->_requesturi = strtok($_SERVER['REQUEST_URI'], '?');
         
         if($this->_requesturi == "/") {
-            $this->_controller = null;
-            $this->_action = null;
-        }   
-        $this->_controller = strtok($this->_requesturi, "/");
-        $this->_action = strtok("/");
-        if ($this->_action) {
-            $this->_action = trim(substr($this->_requesturi,strlen($this->_controller) + 2));
-        } else {
-            $this->_action = $this->_controller;
-            $this->_controller = null;
-        }
+        } 
     }
-    public function getController() {
-        return $this->_controller;
+
+    public function setUriPrefix($prefix) {
+        $this->_uriPrefix = $prefix;
+        return $this;
     }
-    public function getAction() {
-        return $this->_action;
+    
+    public function getRequestUri() {
+        return $this->_requesturi;
     }
+
     public function getParams($cookie = false) {
         if($cookie) {
             return array_merge($this->_params, $_COOKIE);
         }
         return $this->_params;
     }
+    
     public function getParam($name, $type = null, $default = null, $cookie = false) {
         $param = $default;
         if ($cookie && isset($_COOKIE[$name])) {
@@ -51,23 +44,28 @@ class Context {
         }
         return $param;
     }
+    
     public function setParam($key, $value) {
         $this->_params[$key] = $value;
     }
+    
     public function addParams(array $params) {
         $this->_params = array_merge($this->_params, $params);
     }
+    
     public function setParams(array $params) {
         $this->_params = $params;
     }
+    
     public function setCookies(array $cookies, $expire = null) {
         if(!$expire) {
-            $expire = Config_Env::DEFAULT_COOKIE_EXPIRES;
+            return;
         }
         foreach ($cookies as $name => $value) {
             setcookie($name,$value,$expire);
         }
     }
+
     public function getCookies() {
         return $_COOKIE;
     }

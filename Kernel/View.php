@@ -1,5 +1,5 @@
 <?php 
-namespace Simple/Kernel;
+namespace Simple\Kernel;
 class View {
 	/**
 	* @var string 模板名

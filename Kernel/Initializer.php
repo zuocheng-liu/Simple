@@ -1,26 +1,40 @@
 <?php
-namespace Simple/Kernel;
-require_once realpath(dirname(__FILE__)."/../..") . "/Config/Env.php";
+namespace Simple\Kernel;
+
+include_once 'Classloader.php';
+
+use Simple\Kernel\Classloader;
+
 class Initializer {
-	public static function init() {
-		Classloader::startAutoLoader();
-		self::_initEnv();
-		self::_initPath();
-	}
-	protected static function _initEnv() {
-		Config_Env::$PRJ_DIR = realpath(dirname(__FILE__)."/../..");
-		//Config_Env::$PREFIX = isset($_SERVER['HTTP_HOST'])? "http://" . $_SERVER['HTTP_HOST'] : "http://www.zuocheng.net";
-		Config_Env::$PREFIX = "http://www.zuocheng.net";
-	}  
-    protected static function _initPath() {
-		set_include_path(get_include_path() . PATH_SEPARATOR . Config_Env::$PRJ_DIR . '/Simple');
-		set_include_path(get_include_path() . PATH_SEPARATOR . Config_Env::$PRJ_DIR . '/Simple/Core');
-		set_include_path(get_include_path() . PATH_SEPARATOR . Config_Env::$PRJ_DIR . '/Conf');
-		set_include_path(get_include_path() . PATH_SEPARATOR . Config_Env::$PRJ_DIR);
-		foreach (Config_Include::$PATHS as $path) {
-			set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-        }
-	}
-	protected static function _initDB() {
-	}
+    private $_uriPrefix = "";
+    function __construct() {
+        Classloader::startAutoLoader();
+        $simpleFrameworkDir = realpath(dirname(__FILE__)) . '/../../';
+        set_include_path(get_include_path() . PATH_SEPARATOR . $simpleFrameworkDir);
+
+    }
+    public function init() {
+    }
+    public function setProjectDir($productDir) {
+        set_include_path(get_include_path() . PATH_SEPARATOR . $productDir);
+        return $this;
+    }
+    
+    public function getUriPrefix() {
+        return $this->_uriPrefix;
+    }
+
+    public function setUriPrefix($prefix) {
+        $this->_uriPrefix = $prefix;
+        return $this;
+    }
+
+    public function getRouteTable() {
+        return $this->_routeTable;
+    }
+
+    public function setRouteTable(array $routeTable) {
+        $this->_routeTable = $routeTable;
+        return $this;
+    }
 }
