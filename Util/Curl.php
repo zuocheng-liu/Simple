@@ -1,33 +1,40 @@
 <?php
-class Util_Curl {
-    static public function grab($url) {
-        return self::_grab($url);
-    }
-    static public function grabJsonToArray($url) {
-        $output = self::_grab($url);
-        //打印获得的数据
-        $start = strpos($output,"{");
-        $end = strpos($output,"}");
-        $length = $end - $start + 1;
-        $output = substr($output,$start,$length);
-        if (preg_match('/\w:/', $output)) {
-            $output = preg_replace('/(\w+):/is', '"$1":', $output);
-        }
-        $output = json_decode($output,true);
+namespace Simple\Util;
 
-        return $output;
+class Curl {
+    private $_ch = NULL;
+
+    public function __construct () {
+        $this->_ch = curl_init();
     }
-    static protected function _grab($url) {
-        //初始化
-        $ch = curl_init();
-        //设置选项，包括URL
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        //执行并获取HTML文档内容
-        $output = curl_exec($ch);
-        //释放curl句柄
-        curl_close($ch);
-        return $output;
+    
+    public function __destruct () {
+        curl_close($this->_ch);
+    }
+
+    public function sendRequest($url) {
+        curl_setopt($this->_ch, CURLOPT_URL, $url);
+        curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($this->_ch, CURLOPT_HEADER, 0);
+        return curl_exec($this->_ch);
+    }
+   
+    public function postRequest($url, array $postData) {
+        curl_setopt($this->_ch, CURLOPT_URL, $url);
+        curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($this->_ch, CURLOPT_HEADER, 0);
+        curl_setopt($this->_ch, CURLOPT_POSTFIELDS, $postData );
+        return curl_exec($this->_ch);
+    }
+    
+    public function getRequestParam($key, $defaultValue, $cookie = false, $outTime = 864000) {
+        if (isset($_GET[$key])) {
+            setcookie($key, $_GET[$key], time() + $outTime);
+            return  $_GET[$key] ;
+        } elseif ($cookie && isset($_COOKIE[$key])) {
+            return $_COOKIE[$key];
+        } else {
+            return $defaultValue;
+        }
     }
 }

@@ -1,11 +1,20 @@
 <?php 
 namespace Simple\Kernel;
 
+include_once 'View.php';
+
 class Dispatcher {
+
+    protected $_view;
     protected $_uriPrefix;
     protected $_routeTable;
     
     function __construct() {
+    }
+    
+    public function setView(View $view) {
+        $this->_view = $view;
+        return $this;
     }
 
     public function setUriPrefix($prefix) {
@@ -49,8 +58,8 @@ class Dispatcher {
         }
 
         if (isset($config['template']) && !empty($config['template'])) {
-            Controller::getView()->addTemplate($config['template']);
-            Controller::getView()->render();
+            $this->_view->addTemplate($config['template']);
+            $this->_view->render();
         }
     }
 

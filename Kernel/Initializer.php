@@ -13,8 +13,10 @@ class Initializer {
         set_include_path(get_include_path() . PATH_SEPARATOR . $simpleFrameworkDir);
 
     }
+
     public function init() {
     }
+
     public function setProjectDir($productDir) {
         set_include_path(get_include_path() . PATH_SEPARATOR . $productDir);
         return $this;

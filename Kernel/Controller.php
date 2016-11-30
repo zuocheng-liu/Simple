@@ -5,7 +5,6 @@ include_once 'Context.php';
 include_once 'Initializer.php';
 include_once 'View.php';
 
-
 use Simple\Kernel\Context;
 use Simple\Kernel\Initializer;
 use Simple\Kernel\View;
@@ -54,10 +53,11 @@ class Controller {
 
     public function dispatch() {
         
-        $context = Controller::getContext();
-        $dispatcher = Controller::getDispatcher();
+        $context = self::getContext();
+        $dispatcher = self::getDispatcher();
         $dispatcher->setUriPrefix(self::$_initializer->getUriPrefix());
         $dispatcher->setRouteTable(self::$_initializer->getRouteTable());
+        $dispatcher->setView(self::getView());
         
         ob_start();
         try {
@@ -67,7 +67,7 @@ class Controller {
             $info['error'] = $e->getErrorNo(); 
             $info['desc'] = $e->getMessage();
             $info['trace'] = $e->getTraceAsString();
-            Controller::getInstance()->forward('', 'error', $info);
+            self::getInstance()->forward('', 'error', $info);
         }
         ob_end_flush();
     }
