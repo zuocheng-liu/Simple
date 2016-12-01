@@ -40,13 +40,19 @@ class Dispatcher {
             if ($prefix == $this->_uriPrefix) {
             }
         }
-        
+        $uri = rtrim($uri, "/");
         if (empty($uri) || '/' == $uri) {
-            if (isset($this->_routeTable['index']) && !empty($this->_routeTable['index'])) {
-                $config = $this->_routeTable['index'];
+            if (isset($this->_routeTable['/index']) && !empty($this->_routeTable['/index'])) {
+                $config = $this->_routeTable['/index'];
             } else {
                 return 0;
             }
+        } elseif (isset($this->_routeTable[$uri]) && !empty($this->_routeTable[$uri])) {
+            $config = $this->_routeTable[$uri];
+        } elseif (isset($this->_routeTable['/404']) && !empty($this->_routeTable['/404'])) {
+            $config = $this->_routeTable['/404'];
+        } else {
+            return 0;
         }
 
         if (isset($config['class']) 
@@ -56,7 +62,6 @@ class Dispatcher {
         ) {
             $this->__execfunc($config['class'], $config['method']);
         }
-
         if (isset($config['template']) && !empty($config['template'])) {
             $this->_view->addTemplate($config['template']);
             $this->_view->render();

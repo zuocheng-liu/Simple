@@ -1,5 +1,5 @@
 <?php
-namespace Simple\Kernel\AbstractAction;
+namespace Simple\Kernel;
 
 abstract class AbstractAction {
     protected $param;
