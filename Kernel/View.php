@@ -30,10 +30,8 @@ class View {
     public function render() {
         header("Content-type: text/html; charset=utf-8");
         if($this->_template) {
-            $Variables = json_encode($this->_params);
-            $javascript = '<script type="text/javascript">var Variabiles =  '. $Variables . ';</script>' . "\r\n";
             try{
-                echo $javascript;
+                extract($this->_params);
                 require $this->_template;
             } catch (Simple\Kernel\Exception $e) {
                 throw new Simple\Kernel\Exception($e->getMessage());
