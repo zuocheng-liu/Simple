@@ -17,8 +17,8 @@ class Controller {
     protected static $_initializer = null;
 
     public static function getInstance() {
-        if (!self::$_instance instanceof Controller) {
-            self::$_instance = new Controller();
+        if (!self::$_instance instanceof self) {
+            self::$_instance = new self();
         }
         return self::$_instance;
     }
