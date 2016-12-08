@@ -10,15 +10,14 @@ class Logger {
     protected $MODULE = '';	
     protected static $_instance = null;
     public static function getInstance() {
-        if (!self::$_instance instanceof Logger) {
-            self::$_instance = new Logger();
+        if (!self::$_instance instanceof self) {
+            self::$_instance = new self();
         }
         return self::$_instance;
     }
     public function _write($level , $msg) {
     }
     public function debug() {
-
     }
     public function info() {
     }
