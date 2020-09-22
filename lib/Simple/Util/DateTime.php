@@ -12,7 +12,7 @@ class Util_DateTime {
 		if(!$time) $time = time();
 		return date('H:i:s', $time);
 	}
-    public static function hourToDecimal($time,$precision = 2) {        
+    public static function hourToDecimal($time, $precision = 2) {        
         $second = $time % 3600;
         $hour = date('G',$time);
         $decimal = $hour + $second / 3600;
